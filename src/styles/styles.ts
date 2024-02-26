@@ -35,6 +35,10 @@ export const Styles = createGlobalStyle`
         color: #18216d;
     }
 
+    button {
+        color: white !important;
+    }
+
     input,
     textarea {
         border-radius: 4px;
@@ -58,21 +62,21 @@ export const Styles = createGlobalStyle`
     h5,
     h6 {
         font-family: 'Motiva Sans Bold', serif;
-        color: #18216d;
+        color: #A0D6B4;
         font-size: 56px;
         line-height: 1.18;
 
         @media only screen and (max-width: 890px) {
-          font-size: 47px;
+            font-size: 47px;
         }
-      
+
         @media only screen and (max-width: 414px) {
-          font-size: 32px;
+            font-size: 32px;
         }
     }
 
     p {
-        color: #18216d;
+        color: #A0D6B4;
         font-size: 21px;        
         line-height: 1.41;
     }
@@ -84,7 +88,7 @@ export const Styles = createGlobalStyle`
     a {
         text-decoration: none;
         outline: none;
-        color: #2E186A;
+        color: #A0D6B4;
 
         :hover {
             color: #2e186a;
