@@ -1,0 +1,113 @@
+---
+import { Image } from "astro:assets";
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import Icon from "../../components/Icon.astro";
+import { url, formatDate } from "../../lib/site";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, description, date, cover, coverAlt, tags } = post.data;
+---
+
+<Base title={title} description={description || undefined} ogImage={cover?.src}>
+  <article class="section post">
+    <div class="container post__container">
+      <a class="post__back" href={url("/blog/")}>← Все статьи</a>
+      <header class="post__head">
+        <p class="post__meta">
+          <time datetime={date.toISOString()}>{formatDate(date)}</time>
+          {tags.length > 0 && <span> · {tags.join(", ")}</span>}
+        </p>
+        <h1>{title}</h1>
+        {description && <p class="lead">{description}</p>}
+      </header>
+      {
+        cover && (
+          <div class="photo post__cover">
+            <Image src={cover} alt={coverAlt} widths={[640, 960, 1280]} sizes="(max-width: 900px) 92vw, 860px" loading="eager" />
+          </div>
+        )
+      }
+      <div class="prose">
+        <Content />
+      </div>
+
+      <aside class="post__cta">
+        <div>
+          <h2>Хотите разобраться в своём питании?</h2>
+          <p>Начните с анкеты — это займёт около 30–40 минут и поможет подготовить персональный разбор.</p>
+        </div>
+        <a class="btn btn--sage" href={url("/anketa/")}>Заполнить анкету <Icon name="arrow" /></a>
+      </aside>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .post__container {
+    max-width: 900px;
+  }
+
+  .post__back {
+    display: inline-block;
+    margin-bottom: 28px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.92rem;
+  }
+
+  .post__meta {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .post__head {
+    margin-bottom: 36px;
+  }
+
+  .post__cover {
+    aspect-ratio: 16 / 9;
+    margin-bottom: 44px;
+  }
+
+  .prose {
+    margin-inline: auto;
+  }
+
+  .post__cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: 64px;
+    padding: clamp(24px, 4vw, 40px);
+    border-radius: var(--radius-lg);
+    background: var(--sage-soft);
+  }
+
+  .post__cta h2 {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+  }
+
+  .post__cta p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  .post__cta .btn {
+    flex: none;
+  }
+
+  @media (max-width: 720px) {
+    .post__cta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

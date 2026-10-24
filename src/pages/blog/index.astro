@@ -1,0 +1,114 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import PostCard from "../../components/PostCard.astro";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort((a, b) => a.localeCompare(b, "ru"));
+---
+
+<Base title="Блог" description="Статьи о питании, привычках и самочувствии — без крайностей и мифов.">
+  <section class="section blog">
+    <div class="container">
+      <header class="blog__head">
+        <span class="eyebrow">Блог</span>
+        <h1>Полезное о питании</h1>
+        <p class="lead">Статьи о питании, привычках и самочувствии — без крайностей и мифов.</p>
+      </header>
+
+      {
+        tags.length > 1 && (
+          <div class="blog__tags" role="group" aria-label="Фильтр по темам">
+            <button type="button" class="tag is-active" data-tag="">
+              Все
+            </button>
+            {tags.map((tag) => (
+              <button type="button" class="tag" data-tag={tag}>
+                {tag}
+              </button>
+            ))}
+          </div>
+        )
+      }
+
+      {
+        posts.length > 0 ? (
+          <div class="blog__grid">
+            {posts.map((post) => (
+              <div data-tags={post.data.tags.join("|")}>
+                <PostCard post={post} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p class="muted">Статьи скоро появятся.</p>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-tag]");
+  const cards = document.querySelectorAll<HTMLElement>("[data-tags]");
+  buttons.forEach((button) =>
+    button.addEventListener("click", () => {
+      const tag = button.dataset.tag || "";
+      buttons.forEach((b) => b.classList.toggle("is-active", b === button));
+      cards.forEach((card) => {
+        const cardTags = (card.dataset.tags || "").split("|");
+        card.hidden = Boolean(tag) && !cardTags.includes(tag);
+      });
+    }),
+  );
+</script>
+
+<style>
+  .blog__head {
+    max-width: 720px;
+    margin-bottom: 40px;
+  }
+
+  .blog__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .tag {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink-soft);
+    font: 500 0.9rem var(--font-sans);
+    cursor: pointer;
+  }
+
+  .tag.is-active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .blog__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 960px) {
+    .blog__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .blog__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

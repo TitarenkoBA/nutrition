@@ -1,0 +1,21 @@
+---
+import Base from "../layouts/Base.astro";
+import Vault from "../components/vault/Vault.tsx";
+import { url } from "../lib/site";
+---
+
+<Base title="Кабинет" noindex bare>
+  <section class="kabinet">
+    <div class="container">
+      <Vault client:only="react" base={url("/vault/")} homeUrl={url("/")} />
+      <noscript><p class="card">Для работы закрытого раздела включите JavaScript.</p></noscript>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .kabinet {
+    padding: clamp(24px, 4vw, 48px) 0 80px;
+    min-height: 100vh;
+  }
+</style>

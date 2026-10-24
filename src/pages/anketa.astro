@@ -1,0 +1,56 @@
+---
+import Base from "../layouts/Base.astro";
+import Questionnaire from "../components/questionnaire/Questionnaire.tsx";
+import { settings, url, telegramUsername } from "../lib/site";
+---
+
+<Base title="Анкета" description="Анкета для первичной консультации нутрициолога. Заполняется в браузере, ответы никуда не отправляются автоматически.">
+  <section class="section anketa">
+    <div class="container">
+      <header class="anketa__head">
+        <span class="eyebrow">Анкета клиента</span>
+        <h1>Расскажите о себе</h1>
+        <p class="lead">
+          Анкета поможет собрать важные детали: цели, состояние здоровья, привычки и питание. Заполнение займёт
+          30–40 минут — можно делать перерывы, черновик сохраняется на этом устройстве.
+        </p>
+        <p class="anketa__privacy">
+          🔒 Ответы никуда не отправляются автоматически: в конце Вы скачаете PDF и сами отправите его
+          в Telegram или на почту.
+        </p>
+      </header>
+
+      <Questionnaire
+        client:load
+        telegram={telegramUsername()}
+        email={settings.email}
+        ownerName={settings.ownerName}
+        privacyUrl={new URL(url("/privacy/"), Astro.site).href}
+      />
+
+      <noscript>
+        <p class="card">Для работы анкеты включите JavaScript в браузере.</p>
+      </noscript>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .anketa {
+    padding-top: clamp(32px, 5vw, 64px);
+  }
+
+  .anketa__head {
+    max-width: 780px;
+    margin-bottom: clamp(28px, 4vw, 48px);
+  }
+
+  .anketa__privacy {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+    background: var(--sage-soft);
+    color: var(--sage-deep);
+    font-size: 0.95rem;
+  }
+</style>

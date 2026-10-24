@@ -1,0 +1,223 @@
+---
+import Icon from "./Icon.astro";
+import { settings, url } from "../lib/site";
+
+const nav = [
+  { href: url("/#about"), label: "Обо мне" },
+  { href: url("/#process"), label: "Как работаю" },
+  { href: url("/#services"), label: "Форматы" },
+  { href: url("/blog/"), label: "Блог" },
+  { href: url("/#contacts"), label: "Контакты" },
+];
+---
+
+<header class="header" data-header>
+  <div class="container header__inner">
+    <a class="logo" href={url("/")} aria-label="На главную">
+      <span class="logo__mark" aria-hidden="true"><Icon name="leaf" /></span>
+      <span class="logo__text">
+        <span class="logo__name">{settings.ownerName}</span>
+        <span class="logo__role">{settings.role}</span>
+      </span>
+    </a>
+
+    <nav class="nav" id="site-nav" aria-label="Основное меню" data-nav>
+      <ul>
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+      <a class="btn btn--sage btn--small nav__cta" href={url("/anketa/")}>Заполнить анкету</a>
+    </nav>
+
+    <button class="burger" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Открыть меню" data-burger>
+      <Icon name="menu" class="burger__open" />
+      <Icon name="close" class="burger__close" />
+    </button>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const burger = document.querySelector<HTMLButtonElement>("[data-burger]");
+  const nav = document.querySelector<HTMLElement>("[data-nav]");
+
+  const setOpen = (open: boolean) => {
+    header?.classList.toggle("is-open", open);
+    burger?.setAttribute("aria-expanded", String(open));
+    burger?.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+    document.body.style.overflow = open ? "hidden" : "";
+  };
+
+  burger?.addEventListener("click", () => setOpen(!header?.classList.contains("is-open")));
+  nav?.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setOpen(false)));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") setOpen(false);
+  });
+
+  const onScroll = () => header?.classList.toggle("is-scrolled", window.scrollY > 8);
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--cream) 86%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .header.is-scrolled {
+    border-bottom-color: var(--line);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 76px;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .logo__mark {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--sage-soft);
+    color: var(--sage-deep);
+  }
+
+  .logo__mark :global(svg) {
+    width: 22px;
+    height: 22px;
+  }
+
+  .logo__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .logo__name {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 600;
+  }
+
+  .logo__role {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .nav ul {
+    display: flex;
+    gap: 26px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav ul a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .nav ul a:hover {
+    color: var(--sage-deep);
+  }
+
+  .burger {
+    display: none;
+    width: 46px;
+    height: 46px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .burger :global(svg) {
+    width: 22px;
+    height: 22px;
+    margin: auto;
+  }
+
+  .burger :global(.burger__close),
+  .is-open .burger :global(.burger__open) {
+    display: none;
+  }
+
+  .is-open .burger :global(.burger__close) {
+    display: block;
+  }
+
+  @media (max-width: 960px) {
+    .burger {
+      display: grid;
+      place-items: center;
+    }
+
+    .nav {
+      position: fixed;
+      inset: 76px 0 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 24px;
+      padding: 28px var(--gutter) 40px;
+      background: var(--cream);
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    }
+
+    .is-open .nav {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+    }
+
+    .nav ul {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .nav ul a {
+      display: block;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--font-serif);
+      font-size: 1.7rem;
+      color: var(--ink);
+    }
+
+    .nav__cta {
+      align-self: flex-start;
+    }
+  }
+</style>

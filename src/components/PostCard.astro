@@ -1,0 +1,86 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import { url, formatDate } from "../lib/site";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const { title, description, date, cover, coverAlt, tags } = post.data;
+---
+
+<article class="post-card reveal">
+  <a href={url(`/blog/${post.id}/`)}>
+    <div class="post-card__cover">
+      {cover ? <Image src={cover} alt={coverAlt} widths={[400, 640]} sizes="(max-width: 960px) 92vw, 30vw" /> : <div class="post-card__placeholder" />}
+    </div>
+    <div class="post-card__body">
+      <p class="post-card__meta">
+        <time datetime={date.toISOString()}>{formatDate(date)}</time>
+        {tags.length > 0 && <span>· {tags.join(", ")}</span>}
+      </p>
+      <h3>{title}</h3>
+      {description && <p class="post-card__desc">{description}</p>}
+    </div>
+  </a>
+</article>
+
+<style>
+  .post-card a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .post-card a:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+  }
+
+  .post-card__cover {
+    aspect-ratio: 16 / 10;
+    background: var(--sand);
+    overflow: hidden;
+  }
+
+  .post-card__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .post-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--sage-soft), var(--sand));
+  }
+
+  .post-card__body {
+    padding: 22px 24px 26px;
+  }
+
+  .post-card__meta {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .post-card h3 {
+    margin-bottom: 10px;
+  }
+
+  .post-card__desc {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+</style>
