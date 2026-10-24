@@ -24,7 +24,7 @@ import { settings, url, telegramUsername } from "../lib/site";
         client:load
         telegram={telegramUsername()}
         email={settings.email}
-        ownerName={settings.ownerName}
+        ownerName={settings.legalName || settings.ownerName}
         privacyUrl={new URL(url("/privacy/"), Astro.site).href}
       />
 
