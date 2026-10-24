@@ -19,10 +19,10 @@ const photoField = (name: string, label: string) => ({
 
 const config = {
   backend: { name: "github", repo, branch, commit_messages: { create: "Новая статья: {{slug}}", update: "Правка: {{slug}}", delete: "Удаление: {{slug}}" } },
+  // На уровне всего конфига Sveltia требует путь от корня репозитория.
+  // У коллекции блога ниже путь относительный — так Astro находит картинки статей.
   media_folder: "/src/assets/blog",
-  public_folder: "../../assets/blog",
-  site_url: "../",
-  display_url: "../",
+  public_folder: "/src/assets/blog",
   slug: { encoding: "ascii", clean_accents: true, sanitize_replacement: "-" },
   collections: [
     {
@@ -237,7 +237,10 @@ const config = {
   ],
 };
 
-export const GET: APIRoute = () =>
-  new Response(JSON.stringify(config, null, 2), {
+export const GET: APIRoute = ({ site }) => {
+  // Полный адрес сайта, например https://titarenkoba.github.io/nutrition/
+  const siteUrl = new URL(import.meta.env.BASE_URL, site).href;
+  return new Response(JSON.stringify({ ...config, site_url: siteUrl, display_url: siteUrl }, null, 2), {
     headers: { "Content-Type": "application/yaml; charset=utf-8" },
   });
+};
