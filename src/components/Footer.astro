@@ -1,0 +1,140 @@
+---
+import Icon from "./Icon.astro";
+import { settings, url, telegramLink, telegramUsername, mailtoLink } from "../lib/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div>
+        <p class="footer__name">{settings.ownerName}</p>
+        <p class="muted">{settings.role} · {settings.city}</p>
+      </div>
+
+      <nav aria-label="Разделы сайта">
+        <p class="footer__title">Разделы</p>
+        <ul>
+          <li><a href={url("/anketa/")}>Анкета</a></li>
+          <li><a href={url("/blog/")}>Блог</a></li>
+          <li><a href={url("/#services")}>Форматы работы</a></li>
+          <li><a href={url("/privacy/")}>Политика конфиденциальности</a></li>
+        </ul>
+      </nav>
+
+      <div>
+        <p class="footer__title">Связаться</p>
+        <ul>
+          <li>
+            <a href={telegramLink()} target="_blank" rel="noopener noreferrer">
+              <Icon name="telegram" /> @{telegramUsername()}
+            </a>
+          </li>
+          <li><a href={mailtoLink()}><Icon name="mail" /> {settings.email}</a></li>
+          {
+            settings.phone && (
+              <li>
+                <a href={`tel:${settings.phone.replace(/[^\d+]/g, "")}`}>
+                  <Icon name="phone" /> {settings.phone}
+                </a>
+              </li>
+            )
+          }
+          {
+            settings.instagram && (
+              <li>
+                <a href={settings.instagram} target="_blank" rel="noopener noreferrer">
+                  <Icon name="instagram" /> Instagram
+                </a>
+              </li>
+            )
+          }
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer__disclaimer">{settings.disclaimer}</p>
+    <p class="footer__copy muted">© {year} {settings.ownerName}</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--ink);
+    color: #e9e2d8;
+    padding: 72px 0 40px;
+    font-size: 0.95rem;
+  }
+
+  .footer a {
+    color: #e9e2d8;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer a:hover {
+    color: var(--sage);
+  }
+
+  .footer :global(svg) {
+    width: 18px;
+    height: 18px;
+  }
+
+  .footer .muted {
+    color: #a69c90;
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .footer__name {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin: 0 0 4px;
+  }
+
+  .footer__title {
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #a69c90;
+    margin-bottom: 14px;
+  }
+
+  .footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+    overflow-wrap: anywhere;
+  }
+
+  .footer__disclaimer {
+    margin: 28px 0 8px;
+    max-width: 80ch;
+    font-size: 0.85rem;
+    color: #a69c90;
+  }
+
+  .footer__copy {
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  @media (max-width: 760px) {
+    .footer__grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+</style>

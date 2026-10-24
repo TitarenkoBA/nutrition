@@ -1,0 +1,877 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import Base from "../layouts/Base.astro";
+import Icon from "../components/Icon.astro";
+import PostCard from "../components/PostCard.astro";
+import home from "../content/site/home.json";
+import { settings, url, photo, paragraphs, telegramLink, telegramUsername, mailtoLink } from "../lib/site";
+
+const { hero, help, about, process, results, services, testimonials, faq, cta } = home;
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const heroPhoto = photo(hero.photo);
+const helpPhoto = photo(help.photo);
+const aboutPhoto = photo(about.photo);
+const processPhoto = photo(process.photo);
+const resultsPhoto = photo(results.photo);
+const ctaPhoto = photo(cta.photo);
+---
+
+<Base>
+  <!-- Первый экран -->
+  <section class="hero">
+    <div class="container hero__grid">
+      <div class="hero__text">
+        <span class="eyebrow">{hero.eyebrow}</span>
+        <h1>{hero.title}</h1>
+        <p class="lead">{hero.text}</p>
+        <div class="hero__actions">
+          <a class="btn btn--sage" href={url("/anketa/")}>
+            {hero.primaryCta}
+            <Icon name="arrow" />
+          </a>
+          <a class="btn btn--ghost" href="#process">{hero.secondaryCta}</a>
+        </div>
+        <ul class="hero__badges">
+          {
+            hero.badges.map((badge) => (
+              <li>
+                <Icon name="check" />
+                {badge}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      {
+        heroPhoto && (
+          <div class="hero__media">
+            <div class="photo hero__photo">
+              <Image src={heroPhoto} alt={`${settings.ownerName}, ${settings.role.toLowerCase()}`} widths={[480, 720, 960]} sizes="(max-width: 860px) 92vw, 46vw" loading="eager" fetchpriority="high" />
+            </div>
+            <div class="hero__note card">
+              <span class="hero__note-icon"><Icon name="leaf" /></span>
+              <span>{settings.responseTime}</span>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- С чем помогу -->
+  <section class="section help" id="help">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Запросы</span>
+        <h2>{help.title}</h2>
+        <p class="lead">{help.intro}</p>
+      </div>
+      <div class="help__grid">
+        {
+          helpPhoto && (
+            <div class="photo help__photo reveal">
+              <Image src={helpPhoto} alt="" widths={[400, 640]} sizes="(max-width: 860px) 92vw, 30vw" />
+            </div>
+          )
+        }
+        <ol class="help__list">
+          {
+            help.items.map((item, i) => (
+              <li class="card reveal">
+                <span class="help__num">{String(i + 1).padStart(2, "0")}</span>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Обо мне -->
+  <section class="section about" id="about">
+    <div class="container about__grid">
+      {
+        aboutPhoto && (
+          <div class="photo about__photo reveal">
+            <Image src={aboutPhoto} alt={settings.ownerName} widths={[400, 640, 880]} sizes="(max-width: 860px) 92vw, 40vw" />
+          </div>
+        )
+      }
+      <div class="about__text reveal">
+        <span class="eyebrow">{settings.role}</span>
+        <h2>{about.title}</h2>
+        {paragraphs(about.text).map((p) => <p>{p}</p>)}
+        <dl class="about__facts">
+          {
+            about.facts.map((fact) => (
+              <div>
+                <dt>{fact.value}</dt>
+                <dd>{fact.label}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- Как проходит работа -->
+  <section class="section process" id="process">
+    <div class="container process__grid">
+      <div class="process__intro reveal">
+        <span class="eyebrow">Шаг за шагом</span>
+        <h2>{process.title}</h2>
+        {
+          processPhoto && (
+            <div class="photo process__photo">
+              <Image src={processPhoto} alt="" widths={[400, 640]} sizes="(max-width: 860px) 92vw, 36vw" />
+            </div>
+          )
+        }
+      </div>
+      <ol class="steps">
+        {
+          process.steps.map((step, i) => (
+            <li class="steps__item reveal">
+              <span class="steps__num">{i + 1}</span>
+              <div>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Что вы получите -->
+  <section class="section--tight results">
+    <div class="container results__inner reveal">
+      <div class="results__text">
+        <h2>{results.title}</h2>
+        <p class="lead">{results.text}</p>
+        <ul>
+          {
+            results.items.map((item) => (
+              <li>
+                <Icon name="check" />
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      {
+        resultsPhoto && (
+          <div class="photo results__photo">
+            <Image src={resultsPhoto} alt="" widths={[400, 640]} sizes="(max-width: 860px) 92vw, 34vw" />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- Форматы -->
+  <section class="section services" id="services">
+    <div class="container">
+      <div class="section-head section-head--center reveal">
+        <span class="eyebrow">Форматы</span>
+        <h2>{services.title}</h2>
+        <p class="lead">{services.intro}</p>
+      </div>
+      <div class="services__grid">
+        {
+          services.items.map((item) => (
+            <article class:list={["service card reveal", { "service--highlighted": item.highlighted }]}>
+              {item.highlighted && <span class="service__badge">Популярный выбор</span>}
+              <h3>{item.title}</h3>
+              <p class="service__duration">{item.duration}</p>
+              <p class="service__price">{item.price || "Стоимость — по запросу"}</p>
+              <ul>
+                {item.features.map((f) => (
+                  <li>
+                    <Icon name="check" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <a class:list={["btn", item.highlighted ? "btn--sage" : "btn--ghost"]} href={url("/anketa/")}>
+                Начать с анкеты
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Отзывы: блок появляется, когда в админке добавлен хотя бы один отзыв -->
+  {
+    testimonials.items.length > 0 && (
+      <section class="section testimonials" id="testimonials">
+        <div class="container">
+          <div class="section-head reveal">
+            <span class="eyebrow">Отзывы</span>
+            <h2>{testimonials.title}</h2>
+          </div>
+          <div class="testimonials__grid">
+            {(testimonials.items as { name: string; text: string }[]).map((item) => (
+              <figure class="card reveal">
+                <blockquote>{item.text}</blockquote>
+                <figcaption>{item.name}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Вопросы -->
+  <section class="section faq" id="faq">
+    <div class="container faq__grid">
+      <div class="reveal">
+        <span class="eyebrow">FAQ</span>
+        <h2>{faq.title}</h2>
+        <p class="muted">Не нашли ответ? <a href={telegramLink()} target="_blank" rel="noopener noreferrer">Напишите мне</a>.</p>
+      </div>
+      <div class="faq__list">
+        {
+          faq.items.map((item) => (
+            <details class="faq__item reveal">
+              <summary>{item.q}</summary>
+              <p>{item.a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Блог -->
+  {
+    posts.length > 0 && (
+      <section class="section--tight blog-preview">
+        <div class="container">
+          <div class="blog-preview__head reveal">
+            <div>
+              <span class="eyebrow">Блог</span>
+              <h2>Полезное о питании</h2>
+            </div>
+            <a class="btn btn--ghost btn--small" href={url("/blog/")}>
+              Все статьи <Icon name="arrow" />
+            </a>
+          </div>
+          <div class="blog-preview__grid">
+            {posts.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Призыв + контакты -->
+  <section class="section cta" id="contacts">
+    <div class="container">
+      <div class="cta__card reveal">
+        <div class="cta__text">
+          <span class="eyebrow">Начать работу</span>
+          <h2>{cta.title}</h2>
+          <p>{cta.text}</p>
+          <div class="cta__actions">
+            <a class="btn btn--sage" href={url("/anketa/")}>
+              Заполнить анкету <Icon name="arrow" />
+            </a>
+            <a class="btn btn--ghost" href={telegramLink()} target="_blank" rel="noopener noreferrer">
+              <Icon name="telegram" /> @{telegramUsername()}
+            </a>
+            <a class="btn btn--ghost" href={mailtoLink("Вопрос по консультации")}>
+              <Icon name="mail" /> Написать на почту
+            </a>
+          </div>
+          <p class="cta__note muted">{settings.responseTime}</p>
+        </div>
+        {
+          ctaPhoto && (
+            <div class="cta__photo">
+              <Image src={ctaPhoto} alt="" widths={[400, 640]} sizes="(max-width: 860px) 92vw, 34vw" />
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .section-head {
+    max-width: 760px;
+    margin-bottom: clamp(36px, 5vw, 56px);
+  }
+
+  .section-head--center {
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .section-head--center .lead {
+    margin-inline: auto;
+  }
+
+  /* Hero */
+  .hero {
+    padding: clamp(32px, 6vw, 72px) 0 clamp(56px, 8vw, 96px);
+    overflow: hidden;
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 32px 0 28px;
+  }
+
+  .hero__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+
+  .hero__badges li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero__badges :global(svg),
+  .results :global(li svg),
+  .service :global(li svg) {
+    width: 18px;
+    height: 18px;
+    color: var(--sage-deep);
+    flex: none;
+  }
+
+  .hero__media {
+    position: relative;
+  }
+
+  .hero__photo {
+    aspect-ratio: 4 / 5;
+    border-radius: 240px 240px var(--radius-lg) var(--radius-lg);
+  }
+
+  .hero__note {
+    position: absolute;
+    left: -28px;
+    bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    box-shadow: var(--shadow);
+    font-size: 0.92rem;
+    font-weight: 500;
+  }
+
+  .hero__note-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--sage-soft);
+    color: var(--sage-deep);
+  }
+
+  .hero__note-icon :global(svg) {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* С чем помогу */
+  .help {
+    background: var(--paper);
+  }
+
+  .help__grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(24px, 4vw, 48px);
+    align-items: start;
+  }
+
+  .help__photo {
+    aspect-ratio: 3 / 4;
+    position: sticky;
+    top: 100px;
+  }
+
+  .help__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .help__list .card {
+    background: var(--cream);
+    border: none;
+  }
+
+  .help__list p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  .help__num {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 2.4rem;
+    line-height: 1;
+    color: var(--sage);
+    margin-bottom: 18px;
+  }
+
+  /* Обо мне */
+  .about__grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(32px, 6vw, 88px);
+    align-items: center;
+  }
+
+  .about__photo {
+    aspect-ratio: 4 / 5;
+  }
+
+  .about__text p {
+    color: var(--ink-soft);
+  }
+
+  .about__facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 36px 0 0;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+
+  .about__facts dt {
+    font-family: var(--font-serif);
+    font-size: 2.4rem;
+    line-height: 1;
+    color: var(--sage-deep);
+  }
+
+  .about__facts dd {
+    margin: 8px 0 0;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  /* Как проходит работа */
+  .process {
+    background: var(--sage-soft);
+  }
+
+  .process__grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(32px, 6vw, 88px);
+  }
+
+  .process__intro {
+    position: sticky;
+    top: 100px;
+    align-self: start;
+  }
+
+  .process__photo {
+    aspect-ratio: 4 / 5;
+    margin-top: 28px;
+    max-width: 380px;
+  }
+
+  .steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .steps__item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 20px;
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(79, 107, 86, 0.2);
+  }
+
+  .steps__item:first-child {
+    padding-top: 0;
+  }
+
+  .steps__item p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  .steps__num {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid var(--sage-deep);
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    color: var(--sage-deep);
+  }
+
+  /* Что вы получите */
+  .results__inner {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: var(--radius-lg);
+    padding: clamp(28px, 5vw, 64px);
+  }
+
+  .results h2 {
+    color: var(--paper);
+  }
+
+  .results .lead {
+    color: #d8d0c4;
+  }
+
+  .results ul {
+    display: grid;
+    gap: 14px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .results li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .results :global(li svg) {
+    color: var(--sage);
+    margin-top: 4px;
+  }
+
+  .results__photo {
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius);
+  }
+
+  /* Форматы */
+  .services__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .service {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .service--highlighted {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .service--highlighted h3 {
+    color: var(--paper);
+  }
+
+  .service--highlighted :global(li svg) {
+    color: var(--sage);
+  }
+
+  .service__badge {
+    align-self: flex-start;
+    margin-bottom: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--sage);
+    color: var(--ink);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .service__duration {
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .service--highlighted .service__duration {
+    color: #c9c0b4;
+  }
+
+  .service__price {
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+
+  .service ul {
+    display: grid;
+    gap: 10px;
+    margin: 0 0 28px;
+    padding: 20px 0 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+    flex: 1;
+  }
+
+  .service--highlighted ul {
+    border-top-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .service li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 0.95rem;
+  }
+
+  .service :global(li svg) {
+    margin-top: 3px;
+  }
+
+  .service--highlighted .btn--sage {
+    --btn-bg: var(--sage);
+    --btn-fg: var(--ink);
+  }
+
+  /* Отзывы */
+  .testimonials__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .testimonials figure {
+    margin: 0;
+  }
+
+  .testimonials blockquote {
+    margin: 0 0 16px;
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    line-height: 1.4;
+  }
+
+  .testimonials figcaption {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  /* FAQ */
+  .faq {
+    background: var(--paper);
+  }
+
+  .faq__grid {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: clamp(28px, 6vw, 80px);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .faq__item summary {
+    position: relative;
+    padding: 22px 48px 22px 0;
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item summary::after {
+    content: "+";
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-sans);
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: var(--sage-deep);
+    transition: transform 0.2s ease;
+  }
+
+  .faq__item[open] summary::after {
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .faq__item p {
+    margin: 0 0 22px;
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+
+  /* Блог */
+  .blog-preview__head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+
+  .blog-preview__head h2 {
+    margin: 0;
+  }
+
+  .blog-preview__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  /* Призыв */
+  .cta__card {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    overflow: hidden;
+    background: var(--sand);
+    border-radius: var(--radius-lg);
+  }
+
+  .cta__text {
+    padding: clamp(28px, 5vw, 64px);
+  }
+
+  .cta__text p {
+    color: var(--ink-soft);
+    max-width: 58ch;
+  }
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .cta__note {
+    margin: 18px 0 0;
+    font-size: 0.9rem;
+  }
+
+  .cta__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 960px) {
+    .hero__grid,
+    .help__grid,
+    .about__grid,
+    .process__grid,
+    .results__inner,
+    .faq__grid,
+    .cta__card {
+      grid-template-columns: 1fr;
+    }
+
+    .hero__media {
+      max-width: 520px;
+    }
+
+    .hero__note {
+      left: 12px;
+    }
+
+    .help__photo,
+    .process__intro {
+      position: static;
+    }
+
+    .help__photo {
+      aspect-ratio: 16 / 10;
+    }
+
+    .process__photo {
+      display: none;
+    }
+
+    .services__grid,
+    .blog-preview__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cta__photo {
+      max-height: 320px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .help__list {
+      grid-template-columns: 1fr;
+    }
+
+    .about__facts {
+      grid-template-columns: 1fr;
+    }
+
+    .hero__actions .btn,
+    .cta__actions .btn {
+      width: 100%;
+    }
+
+    .blog-preview__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

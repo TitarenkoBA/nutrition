@@ -1,0 +1,19 @@
+---
+// Старый адрес анкеты — перенаправляем на новый.
+import { url } from "../lib/site";
+const target = url("/anketa/");
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href={target} />
+    <title>Анкета</title>
+  </head>
+  <body>
+    <p>Анкета переехала: <a href={target}>перейти к анкете</a>.</p>
+  </body>
+</html>
