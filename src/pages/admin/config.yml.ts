@@ -59,6 +59,12 @@ const config = {
           file: "src/content/site/settings.json",
           fields: [
             { name: "ownerName", label: "Имя (в шапке и подвале)", widget: "string" },
+            {
+              name: "legalName",
+              label: "ФИО полностью (для согласия и политики конфиденциальности)",
+              widget: "string",
+              hint: "В именительном падеже: Фамилия Имя Отчество.",
+            },
             { name: "role", label: "Специализация", widget: "string" },
             { name: "siteTitle", label: "Заголовок сайта (вкладка браузера, поисковики)", widget: "string" },
             { name: "description", label: "Описание сайта для поисковиков", widget: "text" },

@@ -16,7 +16,7 @@ import { settings, url } from "../lib/site";
 
         <h2>1. Кто обрабатывает данные</h2>
         <p>
-          Оператор персональных данных — {settings.ownerName} ({settings.role.toLowerCase()}), контактный email:
+          Оператор персональных данных — {settings.legalName || settings.ownerName} ({settings.role.toLowerCase()}), контактный email:
           <a href={`mailto:${settings.email}`}>{settings.email}</a>.
         </p>
 
