@@ -1,0 +1,47 @@
+---
+import Base from "../layouts/Base.astro";
+import Roulette from "../components/roulette/Roulette.tsx";
+import { url } from "../lib/site";
+---
+
+<Base
+  title="Подбор блюд"
+  description="Не знаете, что приготовить? Крутите барабан: белок, овощи и сложные углеводы — и готовые идеи блюд с порциями и шагами."
+>
+  <section class="section podbor-page">
+    <div class="container">
+      <header class="podbor-page__head">
+        <span class="eyebrow">Подбор блюд</span>
+        <h1>Что приготовить <em>сегодня?</em></h1>
+        <p class="lead">
+          Нажмите на кнопку — барабаны выберут белок, овощи и сложные углеводы, а ниже появятся блюда из этого
+          сочетания. Закрепите понравившийся продукт и крутите остальные, а в фильтрах уберите то, что не едите.
+        </p>
+      </header>
+
+      <Roulette client:load anketaUrl={url("/anketa/")} />
+
+      <p class="podbor-page__note muted">
+        Идеи блюд — ориентир для сбалансированной тарелки, а не персональный план питания. При заболеваниях и
+        аллергиях учитывайте рекомендации врача.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .podbor-page {
+    padding-top: clamp(32px, 5vw, 64px);
+  }
+
+  .podbor-page__head {
+    max-width: 760px;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+
+  .podbor-page__note {
+    margin-top: 36px;
+    font-size: 0.88rem;
+    max-width: 80ch;
+  }
+</style>

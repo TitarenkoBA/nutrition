@@ -256,6 +256,27 @@ const ctaPhoto = photo(cta.photo);
     </div>
   </section>
 
+  <!-- Подбор блюд -->
+  <section class="section--tight podbor-teaser">
+    <div class="container">
+      <div class="podbor-teaser__card reveal">
+        <div class="podbor-teaser__reels emoji" aria-hidden="true">
+          <span>🥩</span>
+          <span>🥦</span>
+          <span>🌾</span>
+        </div>
+        <div class="podbor-teaser__text">
+          <span class="eyebrow">Подбор блюд</span>
+          <h2>{home.podbor.title}</h2>
+          <p>{home.podbor.text}</p>
+        </div>
+        <a class="btn podbor-teaser__btn" href={url("/podbor/")}>
+          {home.podbor.button} <Icon name="arrow" />
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- Блог -->
   {
     posts.length > 0 && (
@@ -756,6 +777,63 @@ const ctaPhoto = photo(cta.photo);
     margin: 0 0 22px;
     color: var(--ink-soft);
     max-width: 62ch;
+  }
+
+  /* Подбор блюд */
+  .podbor-teaser__card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: clamp(20px, 4vw, 48px);
+    align-items: center;
+    padding: clamp(24px, 4vw, 44px);
+    border-radius: var(--radius-lg);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .podbor-teaser__reels {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 2px rgba(233, 201, 138, 0.35);
+  }
+
+  .podbor-teaser__reels span {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 80px;
+    border-radius: 14px;
+    background: var(--paper);
+    font-size: 2rem;
+  }
+
+  .podbor-teaser__text .eyebrow {
+    color: var(--sage);
+  }
+
+  .podbor-teaser__text h2 {
+    color: var(--paper);
+    font-size: clamp(1.8rem, 3.4vw, 2.5rem);
+  }
+
+  .podbor-teaser__text p {
+    margin: 0;
+    color: #d8d0c4;
+    max-width: 56ch;
+  }
+
+  .podbor-teaser__btn {
+    --btn-bg: #e2c483;
+    --btn-fg: var(--ink);
+  }
+
+  @media (max-width: 860px) {
+    .podbor-teaser__card {
+      grid-template-columns: 1fr;
+    }
   }
 
   /* Блог */

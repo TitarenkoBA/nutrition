@@ -221,6 +221,16 @@ const config = {
               ],
             },
             {
+              name: "podbor",
+              label: "Анонс «Подбор блюд»",
+              widget: "object",
+              fields: [
+                { name: "title", label: "Заголовок", widget: "string" },
+                { name: "text", label: "Текст", widget: "text" },
+                { name: "button", label: "Кнопка", widget: "string" },
+              ],
+            },
+            {
               name: "cta",
               label: "Блок «Начнём с анкеты»",
               widget: "object",
